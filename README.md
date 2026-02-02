@@ -50,3 +50,11 @@ uv run manage.py runserver
 ```
 
 2. Navigate to `http://127.0.0.1:8000/admin`
+
+## TODO
+
+- use regex or small language model to filter internship/job applications
+- design a way to get the importance of a job, maybe an api that gets size of company
+- create a frontend with dashboard
+- google oauth
+- add docker files for frontend and backend for docker compose

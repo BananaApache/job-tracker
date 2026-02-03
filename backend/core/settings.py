@@ -125,3 +125,6 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 AUTH_USER_MODEL = "api.User"
+
+GMAIL_CREDENTIALS_PATH = env.str("GMAIL_CREDENTIALS_PATH", default="")
+GMAIL_TOKEN_PATH = env.str("GMAIL_TOKEN_PATH", default="")

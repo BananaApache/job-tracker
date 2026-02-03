@@ -2,6 +2,7 @@ import json
 import os.path
 from email.utils import parseaddr, parsedate_to_datetime
 
+from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 from google.auth.transport.requests import Request
@@ -20,23 +21,32 @@ def load_emails_from_file(file_path):
 def fetch_emails_from_gmail(max_results=100):
     SCOPES = ["https://www.googleapis.com/auth/gmail.metadata"]
 
+    GMAIL_CREDENTIALS_PATH = getattr(settings, "GMAIL_CREDENTIALS_PATH", "credentials.json")
+    GMAIL_TOKEN_PATH = getattr(settings, "GMAIL_TOKEN_PATH", "token.json")
+
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    if os.path.exists(GMAIL_TOKEN_PATH):
+        creds = Credentials.from_authorized_user_file(GMAIL_TOKEN_PATH, SCOPES)
 
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+            if not os.path.exists(GMAIL_CREDENTIALS_PATH):
+                raise FileNotFoundError(
+                    "Error: Gmail credentials not found. Please create/place your credentials.json \
+                    in the project root or set GMAIL_CREDENTIALS_PATH in your .env."
+                )
+
+            flow = InstalledAppFlow.from_client_secrets_file(GMAIL_CREDENTIALS_PATH, SCOPES)
             # creds = flow.run_local_server(port=8080, access_type='offline', prompt='consent')
             creds = flow.run_local_server(port=8080)
         # Save the credentials for the next run
-        with open("token.json", "w") as token:
+        with open(GMAIL_TOKEN_PATH, "w") as token:
             token.write(creds.to_json())
 
     try:

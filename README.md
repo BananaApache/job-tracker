@@ -28,7 +28,24 @@ GMAIL_TOKEN_PATH=/path/to/your/gmail_token.json
 
 This is needed to be able to connect to the Gmail API.
 
-## (OPTIONAL) Populate database
+## Make migrations
+
+1. Make migrations for Label, User, and JobEmail models which can be found in `backend/api/models.py`
+```bash
+cd backend
+uv run manage.py makemigrations
+uv run manage.py migrate
+```
+
+2. The `db.sqlite3` should be made under `backend/`
+
+3. Make a super user to check models in django admin page:
+```bash
+cd backend
+uv run manage.py createsuperuser
+```
+
+## Populate database
 
 1. Create your user:
 ```bash
@@ -45,8 +62,14 @@ uv run fetch_mail.py
 3. Populate database from sample json file
 ```bash
 cd backend
-uv run manage.py populate_data --file scripts/sample.json
+uv run manage.py populate_data --file scripts/sample.json --user user@example.com
 ```
+OR newly scraped 100 emails from Gmail API
+```bash
+cd backend
+uv run manage.py populate_data --user user@example.com
+```
+**Also make sure the micro local server port is not conflicting with your django settings port**
 
 ## Start local server
 

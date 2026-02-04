@@ -146,21 +146,26 @@ class Command(BaseCommand):
     help = "Populate database once with gmail data"
 
     def add_arguments(self, parser):
+        parser.add_argument("--email", type=str, help="Email address to fetch emails for")
         parser.add_argument("--file", type=str, nargs="?", help="Path to JSON file with email data")
 
     def handle(self, *args, **options):
         from api.models import User
+
+        if options["email"] is not None:
+            try:
+                user = User.objects.get(email=options["email"])
+                self.stdout.write(self.style.SUCCESS(f"Using user: {user.email}"))
+            except User.DoesNotExist as e:
+                raise CommandError(f"User with email {options['email']} does not exist.") from e
+        else:
+            raise CommandError("Please provide an email address using --email")
 
         if options["file"]:
             file_path = options["file"]
             emails = load_emails_from_file(file_path)
         else:
             emails = fetch_emails_from_gmail(max_results=100)
-
-        user = User.objects.first()
-
-        if not user:
-            raise CommandError("User with email test@example.com does not exist.")
 
         parsed_emails = parse_emails(emails)
         stats = populate_database(user, parsed_emails)

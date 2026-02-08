@@ -3,6 +3,7 @@ import uuid
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from fernet_fields import EncryptedTextField
 
 # Create your models here.
 
@@ -13,7 +14,7 @@ class UserManager(BaseUserManager):
             raise ValueError("The Email field must be set")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)
+        user.set_password(password)  # dont worry it automatically hashes
         user.save(using=self._db)
         return user
 
@@ -43,6 +44,9 @@ class User(AbstractUser):
 class Label(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
+    def __str__(self):
+        return self.name
+
 
 class JobEmail(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -58,3 +62,15 @@ class JobEmail(models.Model):
     importance = models.IntegerField()
 
     labels = models.ManyToManyField(Label, related_name="emails")
+
+    def __str__(self):
+        return f"{self.subject} from {self.sender_email}"
+
+
+class GoogleAuthToken(models.Model):
+    user = models.OneToOneField("api.User", on_delete=models.CASCADE)
+    token_json = EncryptedTextField()
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"GoogleAuthToken for {self.user.email}"

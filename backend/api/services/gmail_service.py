@@ -57,6 +57,7 @@ def get_client_config():
 
 
 def fetch_emails_from_gmail(user: User, max_results=100):
+    # docs for list messages function https://developers.google.com/workspace/gmail/api/guides/list-messages
     creds = get_creds(user)
 
     try:
@@ -68,19 +69,37 @@ def fetch_emails_from_gmail(user: User, max_results=100):
             return []
 
         all_messages = []
-        for message in messages:
-            msg = (
-                service.users()
-                .messages()
-                .get(
-                    userId="me",
-                    id=message["id"],
-                    format="metadata",
-                    metadataHeaders=["Subject", "From", "Date"],
+
+        # batch requests in groups of 100
+        batch_size = 100
+        for i in range(0, len(messages), batch_size):
+            batch = service.new_batch_http_request()
+
+            batch_responses = [None] * min(batch_size, len(messages) - i)
+
+            def create_callback(index, batch_responses=batch_responses):
+                def callback(request_id, response, exception):
+                    if exception is not None:
+                        import logging
+
+                        logger = logging.getLogger(__name__)
+                        logger.error(f"Batch request error for message {request_id}: {exception}")
+                    else:
+                        batch_responses[index] = response
+
+                return callback
+
+            for j, message in enumerate(messages[i : i + batch_size]):
+                batch.add(
+                    service.users()
+                    .messages()
+                    .get(userId="me", id=message["id"], format="metadata", metadataHeaders=["Subject", "From", "Date"]),
+                    callback=create_callback(j),
                 )
-                .execute()
-            )
-            all_messages.append(msg)
+
+            batch.execute()
+
+            all_messages.extend([msg for msg in batch_responses if msg is not None])
 
         return all_messages
 

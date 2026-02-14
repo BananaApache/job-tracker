@@ -39,7 +39,7 @@ class Command(BaseCommand):
             except Exception as e:
                 raise CommandError(f"Failed to load emails from file {file_path}: {e}") from e
         else:
-            max_results = options.get("maxResults", 100)
+            max_results = options.get("maxResults", 500)
             emails = fetch_emails_from_gmail(user, max_results=max_results)
 
         parsed_emails = parse_emails(emails)

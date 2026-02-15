@@ -90,7 +90,13 @@ OR newly scraped 1000 emails from Gmail API
 
 ```bash
 cd backend
-uv run manage.py populate_data --user user@example.com --maxResults 1000
+uv run manage.py populate_data --user user@example.com --maxResults 1000 --inbox-only
+```
+
+OR with custom specific queries
+
+```bash
+python manage.py populate_data --email user@example.com --maxResults 1000 --query "-category:promotions -category:social -category:updates -category:forums"
 ```
 
 **Also make sure the micro local server port is not conflicting with your django settings port**

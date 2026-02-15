@@ -86,11 +86,11 @@ cd backend
 uv run manage.py populate_data --file scripts/sample.json --user user@example.com
 ```
 
-OR newly scraped 100 emails from Gmail API
+OR newly scraped 1000 emails from Gmail API
 
 ```bash
 cd backend
-uv run manage.py populate_data --user user@example.com
+uv run manage.py populate_data --user user@example.com --maxResults 1000
 ```
 
 **Also make sure the micro local server port is not conflicting with your django settings port**

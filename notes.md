@@ -5,6 +5,8 @@
 - added saving authenticated tokens to a django model with encryption
 - added subfolders for services and utils which both have helper functions used by management commands
 - added clear emails for one specified user management command
+- added batch calling for message.get to save requests
+- added auto pagination support for my populate data management command
 
 ## TODO
 

@@ -9,20 +9,14 @@ assignees: BananaApache
 
 ## Title
 
-[Brief description of the task]
+<!-- Brief description of the task -->
 
 ## Description
 
-[Detailed explanation of what needs to be done]
-
-## Context
+<!-- Detailed explanation of what needs to be done -->
 
 ## Tasks
 
 ## Notes
 
-[Any additional information, references, or considerations]
-
-## Related
-
-[Links to related issues, PRs, or documentation]
+<!-- Any additional information, references, or considerations -->

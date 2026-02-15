@@ -26,6 +26,10 @@ class Command(BaseCommand):
             help="Maximum number of emails to fetch (supports pagination for large counts)",
         )
         parser.add_argument("--file", type=str, nargs="?", help="Path to JSON file with email data")
+        parser.add_argument(
+            "--inbox-only", action="store_true", help="Fetch only from INBOX, excluding promotions, social, etc."
+        )
+        parser.add_argument("--query", type=str, help='Custom Gmail search query (e.g., "from:example.com is:unread")')
 
     def handle(self, *args, **options):
         if options["email"] is not None:
@@ -48,19 +52,23 @@ class Command(BaseCommand):
         else:
             max_results = options["maxResults"]
 
+            label_ids = None
+            query = None
+
+            if options["inbox_only"]:
+                label_ids = ["INBOX"]
+                query = "-category:promotions -category:social"
+
+            if options["query"]:
+                query = options["query"]
+
             if max_results <= 500:
-                self.stdout.write(f"Fetching {max_results} emails from Gmail...")
-                emails = fetch_emails_from_gmail(user, max_results=max_results)
+                emails = fetch_emails_from_gmail(user, max_results=max_results, label_ids=label_ids, query=query)
             else:
-                self.stdout.write(f"Fetching {max_results} emails from Gmail (with pagination)...")
-                emails = fetch_total_emails(user, max_results)
+                emails = fetch_total_emails(user, max_results, label_ids=label_ids, query=query)
 
-            self.stdout.write(self.style.SUCCESS(f"Fetched {len(emails)} emails from Gmail"))
-
-        self.stdout.write("Parsing emails...")
         parsed_emails = parse_emails(emails)
 
-        self.stdout.write("Saving to database...")
         stats = populate_email_database(user, parsed_emails)
 
         self.stdout.write(

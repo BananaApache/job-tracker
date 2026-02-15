@@ -61,7 +61,13 @@ def get_client_config():
     raise FileNotFoundError("No client credentials found in JSON or GSM.")
 
 
-def list_message_ids(user: User, max_results: int = 100, page_token: Optional[str] = None) -> Dict:
+def list_message_ids(
+    user: User,
+    max_results: int = 100,
+    page_token: Optional[str] = None,
+    label_ids: Optional[List[str]] = None,
+    query: Optional[str] = None,
+) -> Dict:
     """
     List message IDs from Gmail (lightweight operation).
 
@@ -69,6 +75,8 @@ def list_message_ids(user: User, max_results: int = 100, page_token: Optional[st
         user: User to fetch messages for
         max_results: Number of messages to fetch (max 500 per page)
         page_token: Token for pagination
+        label_ids: List of label IDs to filter by
+        query: Gmail search query string
 
     Returns:
         Dict with 'messages' list and optional 'nextPageToken'
@@ -79,8 +87,15 @@ def list_message_ids(user: User, max_results: int = 100, page_token: Optional[st
     max_results = min(max_results, 500)
 
     params = {"userId": "me", "maxResults": max_results}
+
     if page_token:
         params["pageToken"] = page_token
+
+    if label_ids:
+        params["labelIds"] = label_ids
+
+    if query:
+        params["q"] = query
 
     results = service.users().messages().list(**params).execute()
     return results
@@ -183,20 +198,24 @@ def fetch_message_details_batch(user: User, message_ids: List[str]) -> List[Dict
     return all_messages
 
 
-def fetch_emails_from_gmail(user: User, max_results: int = 100) -> List[Dict]:
+def fetch_emails_from_gmail(
+    user: User, max_results: int = 100, label_ids: Optional[List[str]] = None, query: Optional[str] = None
+) -> List[Dict]:
     """
     Fetch emails from Gmail with rate limiting and retry logic.
-    Does NOT handle pagination, use fetch_total_emails for large counts.
+    Does NOT handle pagination - use fetch_total_emails for large counts.
 
     Args:
         user: User to fetch emails for
         max_results: Maximum number of emails to fetch (up to 500)
+        label_ids: List of label IDs to filter by
+        query: Gmail search query string
 
     Returns:
         List of email message dictionaries
     """
     try:
-        results = list_message_ids(user, max_results=min(max_results, 500))
+        results = list_message_ids(user, max_results=min(max_results, 500), label_ids=label_ids, query=query)
         messages = results.get("messages", [])
 
         if not messages:
@@ -210,7 +229,13 @@ def fetch_emails_from_gmail(user: User, max_results: int = 100) -> List[Dict]:
         return []
 
 
-def fetch_total_emails(user: User, total_count: int, progress_callback: Optional[callable] = None) -> List[Dict]:
+def fetch_total_emails(
+    user: User,
+    total_count: int,
+    progress_callback: Optional[callable] = None,
+    label_ids: Optional[List[str]] = None,
+    query: Optional[str] = None,
+) -> List[Dict]:
     """
     Fetch a specific total number of emails using pagination.
 
@@ -218,14 +243,11 @@ def fetch_total_emails(user: User, total_count: int, progress_callback: Optional
         user: User to fetch emails for
         total_count: Total number of emails to fetch (e.g., 3000)
         progress_callback: Optional callback function called with (current, total)
+        label_ids: List of label IDs to filter by
+        query: Gmail search query string
 
     Returns:
         List of all fetched email dictionaries
-
-    Example:
-        def on_progress(current, total):
-            print(f"Fetched {current}/{total} emails")
-        emails = fetch_total_emails(user, 3000, on_progress)
     """
     all_message_ids = []
     page_token = None
@@ -238,7 +260,9 @@ def fetch_total_emails(user: User, total_count: int, progress_callback: Optional
         batch_size = min(remaining, 500)
 
         try:
-            results = list_message_ids(user, max_results=batch_size, page_token=page_token)
+            results = list_message_ids(
+                user, max_results=batch_size, page_token=page_token, label_ids=label_ids, query=query
+            )
             messages = results.get("messages", [])
 
             if not messages:

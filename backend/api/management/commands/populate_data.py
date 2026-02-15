@@ -29,7 +29,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--inbox-only", action="store_true", help="Fetch only from INBOX, excluding promotions, social, etc."
         )
-        parser.add_argument("--query", type=str, help='Custom Gmail search query (e.g., "from:example.com is:unread")')
+        parser.add_argument("--query", type=str, help="Custom Gmail search query")
 
     def handle(self, *args, **options):
         if options["email"] is not None:

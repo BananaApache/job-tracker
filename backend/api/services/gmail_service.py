@@ -241,7 +241,7 @@ def fetch_total_emails(
 
     Args:
         user: User to fetch emails for
-        total_count: Total number of emails to fetch (e.g., 3000)
+        total_count: Total number of emails to fetch
         progress_callback: Optional callback function called with (current, total)
         label_ids: List of label IDs to filter by
         query: Gmail search query string

@@ -7,6 +7,7 @@
 - added clear emails for one specified user management command
 - added batch calling for message.get to save requests
 - added auto pagination support for my populate data management command
+- added custom queries and label filters for populate data management command
 
 ## TODO
 

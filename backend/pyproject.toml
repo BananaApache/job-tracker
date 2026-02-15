@@ -27,7 +27,7 @@ line-length = 120
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "W"]
-ignore = []
+ignore = ["W293"]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true

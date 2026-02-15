@@ -13,10 +13,4 @@ assignees: BananaApache
 
 ## Description
 
-<!-- Detailed explanation of what needs to be done -->
-
-## Tasks
-
-## Notes
-
-<!-- Any additional information, references, or considerations -->
+- <!-- Detailed explanation of what needs to be done -->

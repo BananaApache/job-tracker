@@ -1,4 +1,5 @@
 import logging
+from collections.abc import Callable
 
 from api.models import JobEmail, Label, User
 
@@ -53,7 +54,7 @@ def populate_email_database(user: User, parsed_emails: list[dict]):
     return stats
 
 
-def sync_user_emails(user: User, total_count: int = 100, parser_func: callable | None = None) -> dict:
+def sync_user_emails(user: User, total_count: int = 100, parser_func: Callable | None = None) -> dict:
     """
     High-level function to fetch and sync emails to database.
 

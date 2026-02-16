@@ -2,6 +2,7 @@ import json
 import logging
 import os.path
 import time
+from collections.abc import Callable
 
 from django.conf import settings
 from google.auth.exceptions import RefreshError
@@ -231,7 +232,7 @@ def fetch_emails_from_gmail(
 def fetch_total_emails(
     user: User,
     total_count: int,
-    progress_callback: callable | None = None,
+    progress_callback: Callable | None = None,
     label_ids: list[str] | None = None,
     query: str | None = None,
 ) -> list[dict]:

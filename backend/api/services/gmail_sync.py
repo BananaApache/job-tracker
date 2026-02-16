@@ -1,5 +1,4 @@
 import logging
-from typing import Dict, List, Optional
 
 from api.models import JobEmail, Label, User
 
@@ -15,7 +14,7 @@ def wipe_emails_for_user(user: User):
     return count
 
 
-def populate_email_database(user: User, parsed_emails: List[Dict]):
+def populate_email_database(user: User, parsed_emails: list[dict]):
     """
     Save/update emails in the database.
 
@@ -54,7 +53,7 @@ def populate_email_database(user: User, parsed_emails: List[Dict]):
     return stats
 
 
-def sync_user_emails(user: User, total_count: int = 100, parser_func: Optional[callable] = None) -> Dict:
+def sync_user_emails(user: User, total_count: int = 100, parser_func: callable | None = None) -> dict:
     """
     High-level function to fetch and sync emails to database.
 
@@ -117,7 +116,7 @@ def sync_user_emails(user: User, total_count: int = 100, parser_func: Optional[c
     return stats
 
 
-def _default_email_parser(raw_emails: List[Dict]) -> List[Dict]:
+def _default_email_parser(raw_emails: list[dict]) -> list[dict]:
     """
     Default parser to convert Gmail API response to your email format.
     Customize this to match your JobEmail model fields.

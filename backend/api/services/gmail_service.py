@@ -2,7 +2,6 @@ import json
 import logging
 import os.path
 import time
-from typing import Dict, List, Optional
 
 from django.conf import settings
 from google.auth.exceptions import RefreshError
@@ -47,7 +46,7 @@ def get_creds(user: User) -> Credentials:
 def get_client_config():
     path = getattr(settings, "GMAIL_CREDENTIALS_PATH", "credentials.json")
     if os.path.exists(path):
-        with open(path, "r") as f:
+        with open(path) as f:
             return json.load(f)
 
     project_id = getattr(settings, "GCP_PROJECT_ID", None)
@@ -64,10 +63,10 @@ def get_client_config():
 def list_message_ids(
     user: User,
     max_results: int = 100,
-    page_token: Optional[str] = None,
-    label_ids: Optional[List[str]] = None,
-    query: Optional[str] = None,
-) -> Dict:
+    page_token: str | None = None,
+    label_ids: list[str] | None = None,
+    query: str | None = None,
+) -> dict:
     """
     List message IDs from Gmail.
 
@@ -101,7 +100,7 @@ def list_message_ids(
     return results
 
 
-def _execute_batch_with_retry(service, message_ids: List[str]) -> tuple[List[Dict], List[str]]:
+def _execute_batch_with_retry(service, message_ids: list[str]) -> tuple[list[dict], list[str]]:
     """
     Execute a batch request with error handling.
 
@@ -141,7 +140,7 @@ def _execute_batch_with_retry(service, message_ids: List[str]) -> tuple[List[Dic
     return batch_responses, failed_message_ids
 
 
-def fetch_message_details_batch(user: User, message_ids: List[str]) -> List[Dict]:
+def fetch_message_details_batch(user: User, message_ids: list[str]) -> list[dict]:
     """
     Fetch full message details for a list of message IDs using batch requests.
 
@@ -199,8 +198,8 @@ def fetch_message_details_batch(user: User, message_ids: List[str]) -> List[Dict
 
 
 def fetch_emails_from_gmail(
-    user: User, max_results: int = 100, label_ids: Optional[List[str]] = None, query: Optional[str] = None
-) -> List[Dict]:
+    user: User, max_results: int = 100, label_ids: list[str] | None = None, query: str | None = None
+) -> list[dict]:
     """
     Fetch emails from Gmail with rate limiting and retry logic.
     Does NOT handle pagination, use fetch_total_emails for large counts.
@@ -232,10 +231,10 @@ def fetch_emails_from_gmail(
 def fetch_total_emails(
     user: User,
     total_count: int,
-    progress_callback: Optional[callable] = None,
-    label_ids: Optional[List[str]] = None,
-    query: Optional[str] = None,
-) -> List[Dict]:
+    progress_callback: callable | None = None,
+    label_ids: list[str] | None = None,
+    query: str | None = None,
+) -> list[dict]:
     """
     Fetch a specific total number of emails using pagination.
 

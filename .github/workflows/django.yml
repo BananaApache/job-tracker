@@ -4,9 +4,17 @@ on:
   push:
     branches:
       - "**"
+    paths:
+      - "backend/**"                
+      - ".github/workflows/django.yml" 
+      - "pyproject.toml"
   pull_request:
     branches:
       - "main"
+    paths:
+      - "backend/**"                
+      - ".github/workflows/django.yml" 
+      - "pyproject.toml"
 
 jobs:
   test:

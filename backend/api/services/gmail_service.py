@@ -69,7 +69,7 @@ def list_message_ids(
     query: Optional[str] = None,
 ) -> Dict:
     """
-    List message IDs from Gmail (lightweight operation).
+    List message IDs from Gmail.
 
     Args:
         user: User to fetch messages for
@@ -203,7 +203,7 @@ def fetch_emails_from_gmail(
 ) -> List[Dict]:
     """
     Fetch emails from Gmail with rate limiting and retry logic.
-    Does NOT handle pagination - use fetch_total_emails for large counts.
+    Does NOT handle pagination, use fetch_total_emails for large counts.
 
     Args:
         user: User to fetch emails for

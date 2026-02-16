@@ -4,8 +4,8 @@ from django.test import TestCase
 from api.models import User
 
 
-class CreateTestUserCommandTest(TestCase):
-    def test_create_test_user_command(self):
+class TestCreateUser(TestCase):
+    def test_create_user_command(self):
         call_command("create_user")
 
         test_email = "test@example.com"

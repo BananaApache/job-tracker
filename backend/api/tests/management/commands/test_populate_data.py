@@ -41,7 +41,7 @@ class PopulateDataCommandTest(TestCase):
 
         test_user = User.objects.get(email=self.test_email)
 
-        mock_fetch.assert_called_once_with(test_user, max_results=100)
+        mock_fetch.assert_called_once_with(test_user, max_results=500, label_ids=None, query=None)
         self.assertTrue(JobEmail.objects.exists())
         self.assertGreater(JobEmail.objects.count(), 0)
 

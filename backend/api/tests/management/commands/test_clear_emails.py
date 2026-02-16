@@ -4,7 +4,7 @@ from django.test import TestCase
 from api.models import JobEmail, User
 
 
-class ClearEmailsCommandTest(TestCase):
+class TestClearEmails(TestCase):
     def setUp(self):
         self.user_email = "testuser@example.com"
         self.user = User.objects.create(email=self.user_email)

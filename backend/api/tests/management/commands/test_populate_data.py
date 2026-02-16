@@ -8,7 +8,7 @@ from api.models import JobEmail, User
 # Create your tests here.
 
 
-class PopulateDataCommandTest(TestCase):
+class TestPopulateData(TestCase):
     def setUp(self):
         self.test_email = "test@example.com"
         User.objects.create_user(email=self.test_email)

@@ -13,6 +13,7 @@ dependencies = [
     "google-auth-httplib2>=0.3.0",
     "google-auth-oauthlib>=1.2.4",
     "google-cloud-secret-manager>=2.26.0",
+    "psycopg[binary]>=3.3.2",
 ]
 
 [dependency-groups]
@@ -24,6 +25,7 @@ dev = [
 [tool.ruff]
 target-version = "py313"
 line-length = 120
+extend-exclude = ["**/migrations/*"]
 
 [tool.ruff.lint]
 select = [

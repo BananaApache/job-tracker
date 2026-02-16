@@ -7,7 +7,6 @@ __pycache__/
 
 samples/
 
-migrations/
 .DS_Store
 
 scripts/credentials.json

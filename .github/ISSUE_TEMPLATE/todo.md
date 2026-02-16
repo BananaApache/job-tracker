@@ -9,8 +9,4 @@ assignees: BananaApache
 
 ## Title
 
-<!-- Brief description of the task -->
-
 ## Description
-
-- <!-- Detailed explanation of what needs to be done -->

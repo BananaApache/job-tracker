@@ -16,3 +16,10 @@ credentials.json
 sample.json
 
 .ruff_cache/
+
+# Elastic Beanstalk Files
+.elasticbeanstalk
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+*.zip

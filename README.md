@@ -1,5 +1,3 @@
-    
-
 # job-tracker
 
 # About
@@ -20,15 +18,18 @@ make setup
 
 ### Django Secret Key
 
-1. Generate a random django secret key to put in your `.env`. This can be done with django or secrets package. 
+1. Generate a random django secret key to put in your `.env`. This can be done with django or secrets package.
+
 ```bash
 python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
 # OR 
 python -c 'import secrets; print(secrets.token_hex(50))'
 ```
+
 2. Then place it in your `.env` like so:
+
 ```
-SECRET_KEY=your-generated-key
+DJANGO_SECRET_KEY=your-generated-key
 ```
 
 ### Gmail API
@@ -36,7 +37,7 @@ SECRET_KEY=your-generated-key
 1. [Create a Google Cloud project here](https://developers.google.com/workspace/guides/create-project)
 2. You have two options for your secrets file.
 
-   1. (**Recommended method**) Activate your billing account for Google and setup a Secrets Manager, and create your secret. More info can be found [here](https://codelabs.developers.google.com/codelabs/secret-manager-python#0) 
+   1. (**Recommended method**) Activate your billing account for Google and setup a Secrets Manager, and create your secret. More info can be found [here](https://codelabs.developers.google.com/codelabs/secret-manager-python#0)
    2. Or create your client secret in a `credentials.json` and place them inside your project. Then place the path to the `credentials.json` file to your `.env`. You can then delete that after you populate the database with a custom defined django admin management command. For more info on tokens and secrets, see [here](https://developers.google.com/workspace/guides/auth-overview)
 
 ```

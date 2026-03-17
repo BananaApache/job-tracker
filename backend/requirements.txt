@@ -83,7 +83,7 @@ psycopg==3.3.3
     # via backend (pyproject.toml)
 psycopg-binary==3.3.3
     # via psycopg
-pyasn1==0.6.2
+pyasn1==0.6.3
     # via
     #   pyasn1-modules
     #   rsa

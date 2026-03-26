@@ -93,7 +93,7 @@ pycparser==3.0
     # via cffi
 pyparsing==3.3.2
     # via httplib2
-requests==2.32.5
+requests==2.33.0
     # via
     #   google-api-core
     #   requests-oauthlib
